@@ -10,3 +10,14 @@ export async function createInstructor (req: Request, res: Response) {
 
     res.status(201).send("Rota de signup ativa");
 }
+
+export async function loginInstructor (req: Request, res: Response) {
+
+    const {cpf, password} = req.body;
+
+    const token = await instructorsService.signIn({cpf, password});
+
+    res.status(200).send(token);
+
+
+}
