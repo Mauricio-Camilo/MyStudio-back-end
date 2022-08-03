@@ -9,3 +9,38 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Instructor {
+  id          Int           @id @default(autoincrement())
+  name        String
+  cpf         String       @unique
+  password    String   
+  confirmPassword String    
+  clients     Client[]
+  @@map("instructors")
+}
+
+model Client {
+  id          Int           @id @default(autoincrement())
+  name        String
+  cpf         String       @unique
+  instructorId  Int
+  paymentId     Int
+  startDate    String   
+  finishDate   String    
+  notification  Boolean   @default(false)
+  instructors   Instructor  @relation(fields: [instructorId], references: [id])
+  payments      Payment     @relation(fields: [paymentId], references: [id])
+  @@map("clients")
+}
+
+model Payment {
+  id          Int           @id @default(autoincrement())
+  monthly     String
+  quarterly   String
+  semiannual  String
+  annual      String
+  clients     Client[]
+  @@map("payments")
+}
+
