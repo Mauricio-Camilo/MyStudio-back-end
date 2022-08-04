@@ -18,6 +18,4 @@ export async function loginInstructor (req: Request, res: Response) {
     const token = await instructorsService.signIn({cpf, password});
 
     res.status(200).send(token);
-
-
 }

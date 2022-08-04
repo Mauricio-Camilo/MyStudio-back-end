@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Instructor } from '@prisma/client';
 import * as tokenProvider from "./../providers/tokenProvider.js"

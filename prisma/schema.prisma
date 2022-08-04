@@ -35,10 +35,7 @@ model Client {
 
 model Payment {
   id          Int           @id @default(autoincrement())
-  monthly     String
-  quarterly   String
-  semiannual  String
-  annual      String
+  period      String
   clients     Client[]
   @@map("payments")
 }
