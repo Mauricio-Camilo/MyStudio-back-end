@@ -33,20 +33,27 @@ export function calculateExpirationDate (payment : string, startDate : string) {
 
     let formattedStartDate = new Date(stringStartDate);
 
-    if (payment === "mensal") {
+    if (payment === "Mensal") {
         const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 30));
         return formattedExpirtationDate.toLocaleDateString();
     }
-    if (payment === "trimestral") {
+    if (payment === "Trimestral") {
         const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 90));
         return formattedExpirtationDate.toLocaleDateString();
     }
-    if (payment === "semestral") {
+    if (payment === "Semestral") {
         const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 180));
         return formattedExpirtationDate.toLocaleDateString();
     }
-    if (payment === "anual") {
+    if (payment === "Anual") {
         const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 365));
         return formattedExpirtationDate.toLocaleDateString();
     }
+}
+
+export async function getAllClients () {
+
+    const clients = await clientsRepository.getAllClients();
+
+    return clients;
 }

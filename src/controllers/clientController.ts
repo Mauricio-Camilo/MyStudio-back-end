@@ -9,5 +9,17 @@ export async function createClient (req: Request, res: Response) {
 
     await clientsServices.createClient(req.body, instructorId);
 
-    res.status(201).send("Rota de clientes ativa");
+    res.status(201).send("Ok");
+}
+
+export async function getAllClients (req: Request, res: Response) {
+
+    const {user} = res.locals;
+
+    const instructorId = user.id;
+
+    const clients = await clientsServices.getAllClients();
+
+    res.status(200).send(clients);
+
 }

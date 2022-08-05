@@ -16,3 +16,8 @@ export async function findPaymentId (period: string) {
 export async function registerClient (client : SaveClientData) {
   await prisma.client.create({data : client})
 }
+
+export async function getAllClients () {
+  const clients = "Clientes";
+  return clients;
+}
