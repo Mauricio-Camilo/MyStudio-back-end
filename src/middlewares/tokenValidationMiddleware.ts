@@ -15,8 +15,6 @@ const { authorization } = req.headers;
 
     const user = await prisma.instructor.findUnique({where: {id}});
 
-    console.log(user);
-
     if (!user) {
         throw {name: "notFound", message: "User not found"}
     }

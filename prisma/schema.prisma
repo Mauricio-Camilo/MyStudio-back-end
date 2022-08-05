@@ -21,8 +21,7 @@ model Instructor {
 
 model Client {
   id          Int           @id @default(autoincrement())
-  name        String
-  cpf         String       @unique
+  name        String        @unique
   instructorId  Int
   paymentId     Int
   startDate    String   

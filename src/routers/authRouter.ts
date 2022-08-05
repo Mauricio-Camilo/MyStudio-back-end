@@ -6,7 +6,7 @@ import signUpSchema from "../schemas/signUpSchema.js";
 
 const authRouter = Router();
 
-authRouter.use("/signup", validateSchema(signUpSchema), createInstructor);
-authRouter.use("/signin", validateSchema(loginSchema), loginInstructor);
+authRouter.post("/signup", validateSchema(signUpSchema), createInstructor);
+authRouter.post("/signin", validateSchema(loginSchema), loginInstructor);
 
 export default authRouter;

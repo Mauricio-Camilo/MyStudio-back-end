@@ -1,10 +1,7 @@
 import bcrypt from 'bcrypt';
-import dotenv from "dotenv";
 import { Instructor } from '@prisma/client';
 import * as tokenProvider from "./../providers/tokenProvider.js"
 import * as instructorsRepository from "./../repositories/instructorsRepository.js";
-
-dotenv.config();
 
 export type CreateInstructorData = Omit<Instructor, "id">
 export type CreateLoginData = Omit<Instructor, "id"|"name">
@@ -48,18 +45,3 @@ export async function signIn (login : CreateLoginData) {
 
     return token;
 }
-
-// export async function checkSignUpData (cpf : string, password : string, confirmPassword : string) {
-
-//     const checkCpf = await instructorsRepository.findCpf(cpf);
-
-//     if (checkCpf) {
-//         throw { name: "alreadyExists", message: "Cpf already exists"}
-//     }
-    
-//     if (password !== confirmPassword) {
-//         throw { name: "notAuthorized", message: "Invalid confirm password"}
-//     }
-
-// }
-
