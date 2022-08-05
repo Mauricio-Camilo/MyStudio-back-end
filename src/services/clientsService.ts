@@ -57,3 +57,15 @@ export async function getAllClients (instructorId : number) {
 
     return clients;
 }
+
+export async function deleteClient (clientId: number) {
+
+    const checkClientId = await clientsRepository.findClientById(clientId);
+
+    if (!checkClientId) {
+        throw { name: "notFound", message: "Client not found"}
+    }
+
+    await clientsRepository.deleteClientById(clientId);
+    
+}

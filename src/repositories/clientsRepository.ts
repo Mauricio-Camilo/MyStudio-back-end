@@ -21,3 +21,12 @@ export async function getAllClients (instructorId : number) {
   const clients = await prisma.client.findMany({where: {instructorId}})
   return clients;
 }
+
+export async function findClientById (id: number) {
+  const client = await prisma.client.findFirst({where: {id}});
+  return client;
+}
+
+export async function deleteClientById (id: number) {
+  await prisma.client.delete({where :{id}})
+}

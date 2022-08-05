@@ -23,3 +23,13 @@ export async function getAllClients (req: Request, res: Response) {
     res.status(200).send(clients);
 
 }
+
+export async function deleteClient (req: Request, res: Response) {
+
+    const {id} = req.params;
+
+    await clientsServices.deleteClient(parseInt(id))
+
+    res.status(200).send("Aluno deletado")
+    
+}
