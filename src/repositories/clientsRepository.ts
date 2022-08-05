@@ -17,7 +17,7 @@ export async function registerClient (client : SaveClientData) {
   await prisma.client.create({data : client})
 }
 
-export async function getAllClients () {
-  const clients = "Clientes";
+export async function getAllClients (instructorId : number) {
+  const clients = await prisma.client.findMany({where: {instructorId}})
   return clients;
 }

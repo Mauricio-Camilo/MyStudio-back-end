@@ -18,7 +18,7 @@ export async function getAllClients (req: Request, res: Response) {
 
     const instructorId = user.id;
 
-    const clients = await clientsServices.getAllClients();
+    const clients = await clientsServices.getAllClients(instructorId);
 
     res.status(200).send(clients);
 

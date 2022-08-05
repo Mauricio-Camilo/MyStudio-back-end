@@ -51,9 +51,9 @@ export function calculateExpirationDate (payment : string, startDate : string) {
     }
 }
 
-export async function getAllClients () {
+export async function getAllClients (instructorId : number) {
 
-    const clients = await clientsRepository.getAllClients();
+    const clients = await clientsRepository.getAllClients(instructorId);
 
     return clients;
 }
