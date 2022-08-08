@@ -43,19 +43,19 @@ export function calculateExpirationDate (payment : string, startDate : string) {
 
     if (payment === "Mensal") {
         const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 30));
-        return formattedExpirtationDate.toLocaleDateString();
+        return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
     if (payment === "Trimestral") {
         const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 90));
-        return formattedExpirtationDate.toLocaleDateString();
+        return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
     if (payment === "Semestral") {
         const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 180));
-        return formattedExpirtationDate.toLocaleDateString();
+        return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
     if (payment === "Anual") {
         const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 365));
-        return formattedExpirtationDate.toLocaleDateString();
+        return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
 }
 
