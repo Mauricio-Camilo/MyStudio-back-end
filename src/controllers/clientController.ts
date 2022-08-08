@@ -36,7 +36,7 @@ export async function updateClient (req: Request, res: Response) {
 
     const {id} = req.params;
 
-    await clientsServices.updateClient(req.body, parseInt(id))
+    await clientsServices.updateClient(req.body, parseInt(id));
 
-    res.status(200).send("Rota de atualizar cliente")
+    res.status(200).send("cliente editado com sucesso");
 }

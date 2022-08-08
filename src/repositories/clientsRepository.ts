@@ -2,6 +2,8 @@ import { Client } from "@prisma/client";
 import prisma from "./../config/database.js";
 
 export type SaveClientData = Omit<Client,"id">
+// export type UpdateClientData = Omit<Client,"id"|"instructorId"|"notification">
+
 
 export async function findClientName (name: string) {
     const instructor = await prisma.client.findFirst({where: {name}});
@@ -30,4 +32,19 @@ export async function findClientById (id: number) {
 export async function deleteClientById (id: number) {
   await prisma.client.delete({where :{id}})
 }
+
+export async function updateClientData (client : any, id : number) {
+  console.log(client);
+  await prisma.client.update({
+    where: {id},
+    data: {
+      name: client.name,
+      paymentId: client.payment,
+      startDate: client.startDate,
+      finishDate: client.finishDate
+    }
+  })
+}
+
+
 

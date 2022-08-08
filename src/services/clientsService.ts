@@ -88,27 +88,37 @@ export async function updateClient (client : any, clientId : number) {
         throw { name: "notFound", message: "Client not found"}
     }
 
+    const updatedClient = await updateClientProperties(client, response);
+
+    await clientsRepository.updateClientData(updatedClient, clientId);
+}
+
+export async function updateClientProperties (client : any, response : any) {
+
     let calculateNewExpirationDate = false;
+
+    let changePaymentId = false;
 
     let newExpirationDate = response.finishDate;
 
-    if (client.name === "")  client.name = response.name;
+    client.name === "" ? client.name = response.name : client.name;
+
+    client.startDate === "" ? client.startDate = response.startDate : client.startDate;
+
+    client.payment === "" ? 
+        client.payment = await paymentsRepository.findPaymentMethod(response.id) :
+        changePaymentId = true;
 
     if (client.payment !== "" || client.startDate !== ""){
         calculateNewExpirationDate = true;
     }
 
-    if (client.payment === "") {
-        const result = await paymentsRepository.findPaymentMethod(response.paymentId);
-        client.payment = result.period;
-    }
+    calculateNewExpirationDate? 
+    newExpirationDate = calculateExpirationDate(client.payment, client.startDate): 
+    newExpirationDate;
 
-    if (client.startDate === "") {
-        client.startDate = response.startDate;
-    }
+    changePaymentId? 
+    client.payment = await clientsRepository.findPaymentId(client.payment):client.payment;
 
-    if (calculateNewExpirationDate) {
-        newExpirationDate = calculateExpirationDate(client.payment, client.startDate);
-    }
-
+    return {...client, finishDate: newExpirationDate};
 }
