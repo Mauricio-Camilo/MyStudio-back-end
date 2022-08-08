@@ -103,8 +103,9 @@ export async function updateClient (client : any, clientId : number) {
 
     if (calculateNewExpirationDate) {
         const newExpirationDate = calculateExpirationDate(client.payment, client.startDate);
-        console.log(client, newExpirationDate);
     }
+    // console.log(client, newExpirationDate);
+
 
     
 }

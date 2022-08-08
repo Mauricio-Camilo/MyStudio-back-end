@@ -11,14 +11,14 @@ export async function registerInstructor (instructor : CreateInstructorData, con
     const {cpf, password} = instructor;
 
     const checkCpf = await instructorsRepository.findCpf(cpf);
-
+        
     if (checkCpf) {
         throw { name: "alreadyExists", message: "Cpf already exists"}
     }
 
     const cryptedPassword = cryptPassword(password);
-
-    await instructorsRepository.registerInstructor({...instructor, password: cryptedPassword})
+    
+    await instructorsRepository.registerInstructor({...instructor, password: cryptedPassword});
 }
 
 export function cryptPassword (password : string) {
