@@ -18,21 +18,14 @@ export async function createClient (client : CreateClientData, instructorId : nu
         throw { name: "alreadyExists", message: "Name already exists"}
     }
 
-    console.log("entrou aqui")
-
     const expirationDate = calculateExpirationDate(payment, startDate);
 
-    console.log(expirationDate);
+    const paymentId = await clientsRepository.findPaymentId(payment);
 
-    // const paymentId = await clientsRepository.findPaymentId(payment);
+    delete client.payment;
 
-    // delete client.payment;
-
-    // await clientsRepository.registerClient({...client,
-    //     instructorId, paymentId, finishDate: expirationDate, notification: false})
-
-    // console.log("Passou 3x no repository")
-
+    await clientsRepository.registerClient({...client,
+        instructorId, paymentId, finishDate: expirationDate, notification: false})
 }
 
 export function calculateExpirationDate (payment : string, startDate : string) {
@@ -73,9 +66,7 @@ export async function deleteClient (clientId: number) {
     if (!checkClientId) {
         throw { name: "notFound", message: "Client not found"}
     }
-
     await clientsRepository.deleteClientById(clientId);
-    
 }
 
 export async function updateClient (client : any, clientId : number) {
