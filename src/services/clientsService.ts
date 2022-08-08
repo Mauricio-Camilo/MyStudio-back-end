@@ -79,35 +79,32 @@ export async function updateClient (client : any, clientId : number) {
         throw { name: "notFound", message: "Client not found"}
     }
 
-    // let calculateNewExpirationDate = true;
+    let calculateNewExpirationDate = false;
 
-    /* README: CRIAR UMA LÓGICA PARA CHAMAR A FUNÇÃO DE CALCULAR O EXPIRATIO DATE
+    /* README: CRIAR UMA LÓGICA PARA CHAMAR A FUNÇÃO DE CALCULAR O EXPIRATION DATE
     CASO UMA NOVA DATA OU UM NOVO PLANO FOR CHAMADO*/
 
     const response = await clientsRepository.findClientById(clientId);
 
     if (client.name === "")  client.name = response.name;
+
+    if (client.payment !== "" || client.startDate !== ""){
+        calculateNewExpirationDate = true;
+    } 
     
     if (client.payment === "") {
         const result = await paymentsRepository.findPaymentMethod(response.paymentId);
         client.payment = result.period;
-        // calculateNewExpirationDate = true;
     }
 
     if (client.startDate === "") {
         client.startDate = response.startDate;
-        // calculateNewExpirationDate = true;
     } 
 
-    // if (calculateNewExpirationDate) {
-    //     const newExpirationDate = calculateExpirationDate(client.payment, client.startDate)
-    // }
+    if (calculateNewExpirationDate) {
+        const newExpirationDate = calculateExpirationDate(client.payment, client.startDate);
+        console.log(client, newExpirationDate);
+    }
 
-    console.log(client);
-
-    console.log
-
-
-    // await clientsRepository.deleteClientById(clientId);
     
 }
