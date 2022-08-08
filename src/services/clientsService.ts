@@ -30,26 +30,37 @@ export async function createClient (client : CreateClientData, instructorId : nu
 
 export function calculateExpirationDate (payment : string, startDate : string) {
 
-    const stringStartDate = startDate.replace(/\//g,"-");
-
-    let formattedStartDate = new Date(stringStartDate);
-
+    const americanFormattedDate = getAmericanFormatDate(startDate);
+  
     if (payment === "Mensal") {
-        const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 30));
+        const formattedExpirtationDate = new Date(americanFormattedDate.setDate(americanFormattedDate.getDate() + 30));
         return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
     if (payment === "Trimestral") {
-        const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 90));
+        const formattedExpirtationDate = new Date(americanFormattedDate.setDate(americanFormattedDate.getDate() + 90));
         return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
     if (payment === "Semestral") {
-        const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 180));
+        const formattedExpirtationDate = new Date(americanFormattedDate.setDate(americanFormattedDate.getDate() + 180));
         return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
     if (payment === "Anual") {
-        const formattedExpirtationDate = new Date(formattedStartDate.setDate(formattedStartDate.getDate() + 365));
+        const formattedExpirtationDate = new Date(americanFormattedDate.setDate(americanFormattedDate.getDate() + 365));
         return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
+}
+
+export function getAmericanFormatDate (startDate : string) {
+
+    const splitDate = startDate.split("/");
+
+    const arrayDate = [];
+
+    arrayDate.push(splitDate[1], splitDate[0], splitDate[2]);
+
+    const americanDate = arrayDate.join("-");
+
+    return new Date(americanDate);
 }
 
 export async function getAllClients (instructorId : number) {
@@ -71,25 +82,22 @@ export async function deleteClient (clientId: number) {
 
 export async function updateClient (client : any, clientId : number) {
 
-    const checkClientId = await clientsRepository.findClientById(clientId);
+    const response = await clientsRepository.findClientById(clientId);
 
-    if (!checkClientId) {
+    if (!response) {
         throw { name: "notFound", message: "Client not found"}
     }
 
     let calculateNewExpirationDate = false;
 
-    /* README: CRIAR UMA LÓGICA PARA CHAMAR A FUNÇÃO DE CALCULAR O EXPIRATION DATE
-    CASO UMA NOVA DATA OU UM NOVO PLANO FOR CHAMADO*/
-
-    const response = await clientsRepository.findClientById(clientId);
+    let newExpirationDate = response.finishDate;
 
     if (client.name === "")  client.name = response.name;
 
     if (client.payment !== "" || client.startDate !== ""){
         calculateNewExpirationDate = true;
-    } 
-    
+    }
+
     if (client.payment === "") {
         const result = await paymentsRepository.findPaymentMethod(response.paymentId);
         client.payment = result.period;
@@ -97,13 +105,10 @@ export async function updateClient (client : any, clientId : number) {
 
     if (client.startDate === "") {
         client.startDate = response.startDate;
-    } 
+    }
 
     if (calculateNewExpirationDate) {
-        const newExpirationDate = calculateExpirationDate(client.payment, client.startDate);
+        newExpirationDate = calculateExpirationDate(client.payment, client.startDate);
     }
-    // console.log(client, newExpirationDate);
 
-
-    
 }
