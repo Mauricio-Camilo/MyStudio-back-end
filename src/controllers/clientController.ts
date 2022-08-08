@@ -21,7 +21,6 @@ export async function getAllClients (req: Request, res: Response) {
     const clients = await clientsServices.getAllClients(instructorId);
 
     res.status(200).send(clients);
-
 }
 
 export async function deleteClient (req: Request, res: Response) {
@@ -31,5 +30,13 @@ export async function deleteClient (req: Request, res: Response) {
     await clientsServices.deleteClient(parseInt(id))
 
     res.status(200).send("Aluno deletado")
-    
+}
+
+export async function updateClient (req: Request, res: Response) {
+
+    const {id} = req.params;
+
+    await clientsServices.updateClient(req.body, parseInt(id))
+
+    res.status(200).send("Rota de atualizar cliente")
 }

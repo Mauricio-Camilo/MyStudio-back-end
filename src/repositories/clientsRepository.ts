@@ -30,3 +30,4 @@ export async function findClientById (id: number) {
 export async function deleteClientById (id: number) {
   await prisma.client.delete({where :{id}})
 }
+

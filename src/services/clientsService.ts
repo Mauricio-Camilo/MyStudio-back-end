@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
-import * as clientsRepository from "./../repositories/clientsRepository.js"
+import * as clientsRepository from "./../repositories/clientsRepository.js";
+import * as paymentsRepository from "./../repositories/paymentsRepository.js";
 
 export interface CreateClientData {
     name: string,
@@ -67,5 +68,46 @@ export async function deleteClient (clientId: number) {
     }
 
     await clientsRepository.deleteClientById(clientId);
+    
+}
+
+export async function updateClient (client : any, clientId : number) {
+
+    const checkClientId = await clientsRepository.findClientById(clientId);
+
+    if (!checkClientId) {
+        throw { name: "notFound", message: "Client not found"}
+    }
+
+    // let calculateNewExpirationDate = true;
+
+    /* README: CRIAR UMA LÓGICA PARA CHAMAR A FUNÇÃO DE CALCULAR O EXPIRATIO DATE
+    CASO UMA NOVA DATA OU UM NOVO PLANO FOR CHAMADO*/
+
+    const response = await clientsRepository.findClientById(clientId);
+
+    if (client.name === "")  client.name = response.name;
+    
+    if (client.payment === "") {
+        const result = await paymentsRepository.findPaymentMethod(response.paymentId);
+        client.payment = result.period;
+        // calculateNewExpirationDate = true;
+    }
+
+    if (client.startDate === "") {
+        client.startDate = response.startDate;
+        // calculateNewExpirationDate = true;
+    } 
+
+    // if (calculateNewExpirationDate) {
+    //     const newExpirationDate = calculateExpirationDate(client.payment, client.startDate)
+    // }
+
+    console.log(client);
+
+    console.log
+
+
+    // await clientsRepository.deleteClientById(clientId);
     
 }
