@@ -90,35 +90,28 @@ export async function updateClient (client : any, clientId : number) {
 
     const updatedClient = await updateClientProperties(client, response);
 
+    // console.log("passou do primeiro repository", updatedClient);
+
+    // README: AQUI TEM QUE ENVIAR O ID DO PAGAMENTO
+
     await clientsRepository.updateClientData(updatedClient, clientId);
 }
 
 export async function updateClientProperties (client : any, response : any) {
-
-    let calculateNewExpirationDate = false;
-
-    let changePaymentId = false;
-
+        
     let newExpirationDate = response.finishDate;
 
-    client.name === "" ? client.name = response.name : client.name;
+    if (client.name === "") client.name = response.name;
 
-    client.startDate === "" ? client.startDate = response.startDate : client.startDate;
-
-    client.payment === "" ? 
-        client.payment = await paymentsRepository.findPaymentMethod(response.id) :
-        changePaymentId = true;
-
-    if (client.payment !== "" || client.startDate !== ""){
-        calculateNewExpirationDate = true;
-    }
-
-    calculateNewExpirationDate? 
-    newExpirationDate = calculateExpirationDate(client.payment, client.startDate): 
-    newExpirationDate;
-
-    changePaymentId? 
-    client.payment = await clientsRepository.findPaymentId(client.payment):client.payment;
+    if (client.startDate === "") client.startDate = response.startDate;
+        
+    if (client.payment === "")
+        client.payment = await paymentsRepository.findPaymentMethod(response.paymentId);
+    
+    if (client.payment !== "" || client.startDate !== "")
+        newExpirationDate = calculateExpirationDate(client.payment, client.startDate);
+    
+    client.payment = await clientsRepository.findPaymentId(client.payment)
 
     return {...client, finishDate: newExpirationDate};
 }

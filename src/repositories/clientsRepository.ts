@@ -19,11 +19,6 @@ export async function registerClient (client : SaveClientData) {
   await prisma.client.create({data : client})
 }
 
-// export async function getAllClients (instructorId : number) {
-//   const clients = await prisma.client.findMany({where: {instructorId}})
-//   return clients;
-// }
-
 export async function getAllClients (instructorId : number) {
   const clients = await prisma.client.findMany({
     where: {instructorId},
@@ -46,7 +41,6 @@ export async function deleteClientById (id: number) {
 }
 
 export async function updateClientData (client : any, id : number) {
-  console.log(client);
   await prisma.client.update({
     where: {id},
     data: {
