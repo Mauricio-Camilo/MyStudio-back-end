@@ -26,6 +26,7 @@ model Client {
   paymentId     Int
   startDate    String   
   finishDate   String    
+  daysLeft      Int           @default(-1)
   notification  Boolean   @default(false)
   instructors   Instructor  @relation(fields: [instructorId], references: [id])
   payments      Payment     @relation(fields: [paymentId], references: [id])

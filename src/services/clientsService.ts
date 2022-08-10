@@ -81,12 +81,10 @@ export async function getAllClients (instructorId : number) {
     clients.forEach (async (client) =>  {
         const formattedDate = getAmericanFormatDate(client.finishDate)
         const daysLeft = calculateDaysLeft(formattedDate);
+        client.daysLeft = daysLeft;
         if (daysLeft < 7) {
             client.notification = true;
         }
-        // else {
-        //     await clientsRepository.updateNotificationStatus(client.id,false)
-        // }
     })
 
     return clients;
