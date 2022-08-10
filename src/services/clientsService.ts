@@ -33,6 +33,19 @@ export async function createClient (client : CreateClientData, instructorId : nu
         instructorId, paymentId, finishDate: expirationDate, notification: false})
 }
 
+export function getAmericanFormatDate (startDate : string) {
+
+    const splitDate = startDate.split("/");
+
+    const arrayDate = [];
+
+    arrayDate.push(splitDate[1], splitDate[0], splitDate[2]);
+
+    const americanDate = arrayDate.join("-");
+
+    return new Date(americanDate);
+}
+
 export function calculateExpirationDate (payment : string, americanFormattedDate : any) {
   
     if (payment === "Mensal") {
@@ -51,19 +64,6 @@ export function calculateExpirationDate (payment : string, americanFormattedDate
         const formattedExpirtationDate = new Date(americanFormattedDate.setDate(americanFormattedDate.getDate() + 365));
         return formattedExpirtationDate.toLocaleDateString("pt-BR");
     }
-}
-
-export function getAmericanFormatDate (startDate : string) {
-
-    const splitDate = startDate.split("/");
-
-    const arrayDate = [];
-
-    arrayDate.push(splitDate[1], splitDate[0], splitDate[2]);
-
-    const americanDate = arrayDate.join("-");
-
-    return new Date(americanDate);
 }
 
 export function calculateDaysLeft(expirationDate : any) {
@@ -105,30 +105,33 @@ export async function deleteClient (clientId: number) {
 
 export async function updateClient (client : any, clientId : number) {
 
+    
     const response = await clientsRepository.findClientById(clientId);
-
+    
     if (!response) {
         throw { name: "notFound", message: "Client not found"}
     }
-
+    
     const updatedClient = await updateClientProperties(client, response);
-
+    
     await clientsRepository.updateClientData(updatedClient, clientId);
 }
 
 export async function updateClientProperties (client : any, response : any) {
-        
-    let newExpirationDate = response.finishDate;
-
-    if (client.name === "") client.name = response.name;
-
-    if (client.startDate === "") client.startDate = response.startDate;
-        
-    if (client.payment === "")
-        client.payment = await paymentsRepository.findPaymentMethod(response.paymentId);
     
-    if (client.payment !== "" || client.startDate !== "")
-        newExpirationDate = calculateExpirationDate(client.payment, client.startDate);
+    let newExpirationDate = response.finishDate;
+    
+    if (client.name === "") client.name = response.name;
+    
+    if (client.startDate === "") client.startDate = response.startDate;
+    
+    if (client.payment === "")
+    client.payment = await paymentsRepository.findPaymentMethod(response.paymentId);
+
+    if (client.payment !== "" || client.startDate !== "") {
+        const formattedStartDate = getAmericanFormatDate(client.startDate)
+        newExpirationDate = calculateExpirationDate(client.payment, formattedStartDate);
+    }
     
     client.payment = await clientsRepository.findPaymentId(client.payment)
 
