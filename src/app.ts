@@ -7,15 +7,8 @@ import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js";
 const app = express();
 app.use(json());
 app.use(cors());
-
-app.get("/", (req, res) => {
-    res.send("Ola mundo");
-})
-
 app.use(router);
 app.use(errorHandlerMiddleware);
-
-
 
 export default app;
 
