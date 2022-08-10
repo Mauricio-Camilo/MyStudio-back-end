@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-interface CreateSignUpData {
+export interface CreateSignUpData {
   name: string
   cpf: string
   password: string

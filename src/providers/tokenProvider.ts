@@ -22,3 +22,8 @@ export function decode (token: string): TokenPayload {
         throw { name: "notAuthorized", message: "Invalid token"}    
     }
 }
+
+export const tokenProvider = {
+    encode,
+    decode
+}

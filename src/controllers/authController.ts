@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import * as instructorsService from "../services/instructorsService.js"
+import { instructorsService } from "../services/instructorsService.js"
 
 export async function createInstructor (req: Request, res: Response) {
 

@@ -9,7 +9,7 @@ describe ("Authentication test suit", () => {
     it ("given name, cpf and password, create instructor", async () => {
         const instructor = {
             name: "Instrutor1",
-            cpf: "000.000.000.10",
+            cpf: "000.000.000-10",
             password: "abcdefg",
             confirmPassword: "abcdefg"
         }

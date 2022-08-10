@@ -1,12 +1,14 @@
 import bcrypt from 'bcrypt';
 import { Instructor } from '@prisma/client';
-import * as tokenProvider from "./../providers/tokenProvider.js"
-import * as instructorsRepository from "./../repositories/instructorsRepository.js";
+import { tokenProvider } from "./../providers/tokenProvider.js"
+import { instructorsRepository } from "./../repositories/instructorsRepository.js";
+
+// README: MUDAR O JEITO DE EXPORTAR FUNÇÕES PARA FUNCIONAR NOS TESTES
 
 export type CreateInstructorData = Omit<Instructor, "id">
 export type CreateLoginData = Omit<Instructor, "id"|"name">
 
-export async function registerInstructor (instructor : CreateInstructorData, confirmPassword : string) {
+async function registerInstructor (instructor : CreateInstructorData, confirmPassword : string) {
 
     const {cpf, password} = instructor;
 
@@ -21,13 +23,13 @@ export async function registerInstructor (instructor : CreateInstructorData, con
     await instructorsRepository.registerInstructor({...instructor, password: cryptedPassword});
 }
 
-export function cryptPassword (password : string) {
+function cryptPassword (password : string) {
     const SALT = 10;
     const cryptedPassword = bcrypt.hashSync(password, SALT);
     return cryptedPassword;
 }
 
-export async function signIn (login : CreateLoginData) {
+async function signIn (login : CreateLoginData) {
 
     const { cpf , password } = login
 
@@ -37,11 +39,30 @@ export async function signIn (login : CreateLoginData) {
         throw { name: "notFound", message: "Cpf not found"}
     }
 
-    if (!bcrypt.compareSync(password, instructor.password)) {
+    const checkPassword : boolean = await instructorsService.comparePassword(password, instructor.password);
+
+    if (!checkPassword) {
         throw { name: "notAuthorized", message: "Incorrect password"}
     }
 
     const token = tokenProvider.encode({id: instructor.id});
 
     return token;
+}
+
+async function comparePassword (password : string , hashPassword : string) {
+
+    const checkPassword =  bcrypt.compareSync(password, hashPassword)
+    return checkPassword;
+
+    // if (!checkPassword) {
+    //     throw { name: "notAuthorized", message: "Incorrect password"}
+    // }
+}
+
+export const instructorsService = {
+    registerInstructor,
+    cryptPassword,
+    signIn,
+    comparePassword
 }
