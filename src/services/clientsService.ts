@@ -63,9 +63,31 @@ export function getAmericanFormatDate (startDate : string) {
     return new Date(americanDate);
 }
 
+export function calculateDaysLeft(expirationDate : any) {
+
+    const today = new Date();
+
+    let differenceInMiliSeconds = expirationDate.getTime() - today.getTime();
+    
+    let differenceInDays = differenceInMiliSeconds / (1000 * 3600 * 24)
+    
+    return differenceInDays;
+}
+
 export async function getAllClients (instructorId : number) {
 
     const clients = await clientsRepository.getAllClients(instructorId);
+
+    clients.forEach (async (client) =>  {
+        const formattedDate = getAmericanFormatDate(client.finishDate)
+        const daysLeft = calculateDaysLeft(formattedDate);
+        if (daysLeft < 7) {
+            client.notification = true;
+        }
+        // else {
+        //     await clientsRepository.updateNotificationStatus(client.id,false)
+        // }
+    })
 
     return clients;
 }

@@ -34,7 +34,11 @@ export async function deleteClient (req: Request, res: Response) {
 
 export async function updateClient (req: Request, res: Response) {
 
+    console.log(req.body);
+
     const {id} = req.params;
+    
+    console.log(id);
 
     await clientsServices.updateClient(req.body, parseInt(id));
 

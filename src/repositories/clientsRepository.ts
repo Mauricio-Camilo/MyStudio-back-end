@@ -19,6 +19,15 @@ export async function registerClient (client : SaveClientData) {
   await prisma.client.create({data : client})
 }
 
+export async function updateNotificationStatus (id : number, status : boolean) {
+  await prisma.client.update({
+    where: {id},
+    data: {
+      notification: status
+    }
+  })
+}
+
 export async function getAllClients (instructorId : number) {
   const clients = await prisma.client.findMany({
     where: {instructorId},
