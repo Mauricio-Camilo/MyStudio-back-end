@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import * as clientsRepository from "./../repositories/clientsRepository.js";
 import * as paymentsRepository from "./../repositories/paymentsRepository.js";
 
@@ -18,7 +17,13 @@ export async function createClient (client : CreateClientData, instructorId : nu
         throw { name: "alreadyExists", message: "Name already exists"}
     }
 
-    const expirationDate = calculateExpirationDate(payment, startDate);
+    const formattedStartDate = getAmericanFormatDate(startDate);
+
+    if (formattedStartDate.toJSON() === null) {
+        throw { name: "validationError", message: "Invalid date"}
+    }
+
+    const expirationDate = calculateExpirationDate(payment, formattedStartDate);
 
     const paymentId = await clientsRepository.findPaymentId(payment);
 
@@ -28,9 +33,7 @@ export async function createClient (client : CreateClientData, instructorId : nu
         instructorId, paymentId, finishDate: expirationDate, notification: false})
 }
 
-export function calculateExpirationDate (payment : string, startDate : string) {
-
-    const americanFormattedDate = getAmericanFormatDate(startDate);
+export function calculateExpirationDate (payment : string, americanFormattedDate : any) {
   
     if (payment === "Mensal") {
         const formattedExpirtationDate = new Date(americanFormattedDate.setDate(americanFormattedDate.getDate() + 30));
@@ -109,10 +112,6 @@ export async function updateClient (client : any, clientId : number) {
     }
 
     const updatedClient = await updateClientProperties(client, response);
-
-    // console.log("passou do primeiro repository", updatedClient);
-
-    // README: AQUI TEM QUE ENVIAR O ID DO PAGAMENTO
 
     await clientsRepository.updateClientData(updatedClient, clientId);
 }
