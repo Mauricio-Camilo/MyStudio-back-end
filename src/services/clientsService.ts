@@ -83,23 +83,14 @@ async function getAllClients (instructorId : number) {
 
     const clients = await clientsRepository.getAllClients(instructorId);
 
-    for (let i = 0; i < clients.length; i ++) {
-        const formattedDate = getAmericanFormatDate(clients[i].finishDate)
+    clients.forEach (async (client) =>  {
+        const formattedDate = getAmericanFormatDate(client.finishDate)
         const daysLeft = calculateDaysLeft(formattedDate);
-        clients[i].daysLeft = daysLeft;
+        client.daysLeft = daysLeft;
         if (daysLeft < 7) {
-            clients[i].notification = true;
+            client.notification = true;
         }
-    }
-
-    // clients.forEach (async (client) =>  {
-    //     const formattedDate = getAmericanFormatDate(client.finishDate)
-    //     const daysLeft = calculateDaysLeft(formattedDate);
-    //     client.daysLeft = daysLeft;
-    //     if (daysLeft < 7) {
-    //         client.notification = true;
-    //     }
-    // })
+    })
 
     return clients;
 }
@@ -138,10 +129,8 @@ async function updateClientProperties (client : any, response : any) {
     if (client.payment === "")
     client.payment = await paymentsRepository.findPaymentMethod(response.paymentId);
 
-    if (client.payment !== "" || client.startDate !== "") {
-        const formattedStartDate = clientsService.getAmericanFormatDate(client.startDate)
-        newExpirationDate = clientsService.calculateExpirationDate(client.payment, formattedStartDate);
-    }
+    const formattedStartDate = clientsService.getAmericanFormatDate(client.startDate)
+    newExpirationDate = clientsService.calculateExpirationDate(client.payment, formattedStartDate);
     
     client.payment = await clientsRepository.findPaymentId(client.payment)
 

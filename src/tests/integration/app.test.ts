@@ -78,6 +78,4 @@ describe ("Authentication test suit", () => {
         const response = await supertest(app).post("/signin").send(login);
         expect (response.statusCode).toBe(422);
     });
-
-
 })

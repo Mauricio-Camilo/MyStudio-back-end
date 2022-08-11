@@ -78,7 +78,7 @@ describe("clients service get all clients function tests suite", () => {
 
     it("Should get all clients", async () => {
 
-        const client : Client = {
+        const client : any = [{
             id: 1,
             name: "Aluno1",
             instructorId: 3,
@@ -87,24 +87,27 @@ describe("clients service get all clients function tests suite", () => {
             finishDate: "15/08/2022",
             daysLeft: -1,
             notification: false
+        },
+        {
+            id: 2,
+            name: "Aluno2",
+            instructorId: 3,
+            paymentId: 8,
+            startDate: "01/01/2022",
+            finishDate: "15/08/2022",
+            daysLeft: -1,
+            notification: false
         }
-
+    ]
+    
         jest.spyOn(clientsRepository, 'getAllClients').mockImplementationOnce(() : any => {
             return client
         });
 
         await clientsService.getAllClients(client.instructorId);
 
-        expect(clientsRepository.getAllClients).toBeCalled()
-        // expect(clientsService.getAmericanFormatDate).toBeCalled();
-        // expect(clientsService.calculateDaysLeft).toBeCalled();
-    })
-
-    // it("Should pass calculateDaysLeft function", async () => {
-    //     const date = "01/01/2022";
-    //     const calculatedDate = clientsService.calculateDaysLeft(date);
-    //     expect(true).toBe(true);
-    // })
+        expect(clientsRepository.getAllClients).toBeCalled();
+    });
 })
 
 describe("clients service delete client tests suite", () => {
@@ -168,7 +171,7 @@ describe("clients service update client tests suite", () => {
         expect(clientsRepository.updateClientData).toBeCalled();
     })
 
-    it("should get the updated client data", async () => {
+    it("should get the updated client data, with payment and startDate empties", async () => {
         const client : CreateClientData = {
             name: "",
             payment: "",
@@ -195,8 +198,36 @@ describe("clients service update client tests suite", () => {
         expect(clientsRepository.findPaymentId).toBeCalled();
         expect(clientsService.getAmericanFormatDate).toBeCalled();
         expect(clientsService.calculateExpirationDate).toBeCalled();
-
     })
+
+    // it("should get the updated client data, with one field empty", async () => {
+    //     const client : CreateClientData = {
+    //         name: "",
+    //         payment: "Trimestral",
+    //         startDate: "01/01/2023",
+    //     }
+
+    //     // jest.spyOn(paymentsRepository, 'findPaymentMethod').mockImplementationOnce(() : any => {
+    //     //     return "Mensal"
+    //     // });
+
+    //     jest.spyOn(clientsRepository, 'findPaymentId').mockImplementationOnce(() : any => {
+    //         return 7;
+    //     });
+
+    //     jest.spyOn(clientsService, 'getAmericanFormatDate').mockImplementationOnce(() : any => {});
+
+    //     jest.spyOn(clientsService, 'calculateExpirationDate').mockImplementationOnce(() : any => {
+    //         return "01/01/2023"
+    //     });
+
+    //     await clientsService.updateClientProperties(client,client);
+
+    //     // expect(paymentsRepository.findPaymentMethod).toBeCalled();
+    //     expect(clientsRepository.findPaymentId).toBeCalled();
+    //     expect(clientsService.getAmericanFormatDate).toBeCalled();
+    //     expect(clientsService.calculateExpirationDate).toBeCalled();
+    // })
 
     it("should fail to delete a client, invalid id", async () => {
         const client : CreateClientData = {
