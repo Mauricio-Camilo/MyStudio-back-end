@@ -51,13 +51,7 @@ async function signIn (login : CreateLoginData) {
 }
 
 async function comparePassword (password : string , hashPassword : string) {
-
-    const checkPassword =  bcrypt.compareSync(password, hashPassword)
-    return checkPassword;
-
-    // if (!checkPassword) {
-    //     throw { name: "notAuthorized", message: "Incorrect password"}
-    // }
+    return bcrypt.compareSync(password, hashPassword)
 }
 
 export const instructorsService = {

@@ -2,24 +2,22 @@ import { Client } from "@prisma/client";
 import prisma from "./../config/database.js";
 
 export type SaveClientData = Omit<Client,"id"|"daysLeft">
-// export type UpdateClientData = Omit<Client,"id"|"instructorId"|"notification">
 
-
-export async function findClientName (name: string) {
+async function findClientName (name: string) {
     const instructor = await prisma.client.findFirst({where: {name}});
     return instructor;
 }
 
-export async function findPaymentId (period: string) {
+async function findPaymentId (period: string) {
   const paymentId = await prisma.payment.findFirst({where: {period}});
   return paymentId.id;
 }
 
-export async function registerClient (client : SaveClientData) {
+async function registerClient (client : SaveClientData) {
   await prisma.client.create({data : client})
 }
 
-export async function updateNotificationStatus (id : number, status : boolean) {
+async function updateNotificationStatus (id : number, status : boolean) {
   await prisma.client.update({
     where: {id},
     data: {
@@ -28,7 +26,7 @@ export async function updateNotificationStatus (id : number, status : boolean) {
   })
 }
 
-export async function getAllClients (instructorId : number) {
+async function getAllClients (instructorId : number) {
   const clients = await prisma.client.findMany({
     where: {instructorId},
     select: {
@@ -40,16 +38,16 @@ export async function getAllClients (instructorId : number) {
   return clients;
 }
 
-export async function findClientById (id: number) {
+async function findClientById (id: number) {
   const client = await prisma.client.findFirst({where: {id}});
   return client;
 }
 
-export async function deleteClientById (id: number) {
+async function deleteClientById (id: number) {
   await prisma.client.delete({where :{id}})
 }
 
-export async function updateClientData (client : any, id : number) {
+async function updateClientData (client : any, id : number) {
   await prisma.client.update({
     where: {id},
     data: {
@@ -59,6 +57,17 @@ export async function updateClientData (client : any, id : number) {
       finishDate: client.finishDate
     }
   })
+}
+
+export const clientsRepository = {
+  deleteClientById,
+  findClientById,
+  findClientName,
+  findPaymentId,
+  getAllClients,
+  registerClient,
+  updateClientData,
+  updateNotificationStatus
 }
 
 

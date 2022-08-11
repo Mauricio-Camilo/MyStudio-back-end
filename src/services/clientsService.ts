@@ -1,5 +1,5 @@
-import * as clientsRepository from "./../repositories/clientsRepository.js";
-import * as paymentsRepository from "./../repositories/paymentsRepository.js";
+import { clientsRepository } from "./../repositories/clientsRepository.js";
+import { paymentsRepository } from "./../repositories/paymentsRepository.js";
 
 export interface CreateClientData {
     name: string,
@@ -7,7 +7,7 @@ export interface CreateClientData {
     startDate: string
 }
 
-export async function createClient (client : CreateClientData, instructorId : number) {
+async function createClient (client : CreateClientData, instructorId : number) {
 
     const {name, payment, startDate} = client;
 
@@ -17,13 +17,13 @@ export async function createClient (client : CreateClientData, instructorId : nu
         throw { name: "alreadyExists", message: "Name already exists"}
     }
 
-    const formattedStartDate = getAmericanFormatDate(startDate);
+    const formattedStartDate = clientsService.getAmericanFormatDate(startDate);
 
     if (formattedStartDate.toJSON() === null) {
         throw { name: "validationError", message: "Invalid date"}
     }
 
-    const expirationDate = calculateExpirationDate(payment, formattedStartDate);
+    const expirationDate = clientsService.calculateExpirationDate(payment, formattedStartDate);
 
     const paymentId = await clientsRepository.findPaymentId(payment);
 
@@ -33,7 +33,7 @@ export async function createClient (client : CreateClientData, instructorId : nu
         instructorId, paymentId, finishDate: expirationDate, notification: false})
 }
 
-export function getAmericanFormatDate (startDate : string) {
+function getAmericanFormatDate (startDate : string) {
 
     const splitDate = startDate.split("/");
 
@@ -46,7 +46,7 @@ export function getAmericanFormatDate (startDate : string) {
     return new Date(americanDate);
 }
 
-export function calculateExpirationDate (payment : string, americanFormattedDate : any) {
+function calculateExpirationDate (payment : string, americanFormattedDate : any) {
   
     if (payment === "Mensal") {
         const formattedExpirtationDate = new Date(americanFormattedDate.setDate(americanFormattedDate.getDate() + 30));
@@ -66,7 +66,7 @@ export function calculateExpirationDate (payment : string, americanFormattedDate
     }
 }
 
-export function calculateDaysLeft(expirationDate : any) {
+function calculateDaysLeft(expirationDate : any) {
 
     const today = new Date();
 
@@ -77,7 +77,7 @@ export function calculateDaysLeft(expirationDate : any) {
     return differenceInDays;
 }
 
-export async function getAllClients (instructorId : number) {
+async function getAllClients (instructorId : number) {
 
     const clients = await clientsRepository.getAllClients(instructorId);
 
@@ -93,7 +93,7 @@ export async function getAllClients (instructorId : number) {
     return clients;
 }
 
-export async function deleteClient (clientId: number) {
+async function deleteClient (clientId: number) {
 
     const checkClientId = await clientsRepository.findClientById(clientId);
 
@@ -103,7 +103,7 @@ export async function deleteClient (clientId: number) {
     await clientsRepository.deleteClientById(clientId);
 }
 
-export async function updateClient (client : any, clientId : number) {
+async function updateClient (client : any, clientId : number) {
 
     
     const response = await clientsRepository.findClientById(clientId);
@@ -117,7 +117,7 @@ export async function updateClient (client : any, clientId : number) {
     await clientsRepository.updateClientData(updatedClient, clientId);
 }
 
-export async function updateClientProperties (client : any, response : any) {
+async function updateClientProperties (client : any, response : any) {
     
     let newExpirationDate = response.finishDate;
     
@@ -136,4 +136,15 @@ export async function updateClientProperties (client : any, response : any) {
     client.payment = await clientsRepository.findPaymentId(client.payment)
 
     return {...client, finishDate: newExpirationDate};
+}
+
+export const clientsService = {
+    createClient,
+    getAmericanFormatDate,
+    calculateExpirationDate,
+    calculateDaysLeft,
+    getAllClients,
+    deleteClient,
+    updateClient,
+    updateClientProperties
 }
