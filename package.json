@@ -8,8 +8,9 @@
     "build": "tsc",
     "start": "node dist/src/server.js",
     "dev": "nodemon src/server.ts",
-    "test:unit": "NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i --coverage --testPathPattern=tests/unit",
-    "test:integration": "dotenv -e .env.test prisma migrate dev && NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i --testPathPattern=tests/integration"
+    "seed": "dotenv -e .env.test prisma db seed",
+    "test:unit": "dotenv -e .env.test prisma migrate dev && NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i --coverage --testPathPattern=tests/unit",
+    "test:integration": "NODE_OPTIONS=--experimental-vm-modules dotenv -e .env.test jest -- -i --testPathPattern=tests/integration"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"

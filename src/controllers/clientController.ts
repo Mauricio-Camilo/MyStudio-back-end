@@ -9,6 +9,8 @@ export async function createClient (req: Request, res: Response) {
 
     await clientsService.createClient(req.body, instructorId);
 
+    console.log("Criou o cliente");
+
     res.status(201).send("Ok");
 }
 

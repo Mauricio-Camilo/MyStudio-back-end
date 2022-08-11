@@ -24,7 +24,7 @@ async function createClient (client : CreateClientData, instructorId : number) {
     }
 
     const expirationDate = clientsService.calculateExpirationDate(payment, formattedStartDate);
-
+    
     const paymentId = await clientsRepository.findPaymentId(payment);
 
     delete client.payment;

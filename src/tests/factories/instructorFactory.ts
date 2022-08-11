@@ -1,7 +1,6 @@
 import prisma  from "./../../config/database.js";
 import { faker } from '@faker-js/faker';
 import bcrypt from "bcrypt";
-import { Instructor } from "@prisma/client";
 
 export interface CreateInstructorData {
     name: string;
@@ -31,12 +30,12 @@ export function createLogin (instructor : CreateInstructorData) {
 
 export async function postInstructor (data : CreateInstructorData) {
     const {name, cpf, password} = data;
-    await prisma.instructor.create({
+    const instructor = await prisma.instructor.create({
         data: {
             name,
             cpf,
             password: bcrypt.hashSync(password,10)
         }
     })
-
+    return instructor.id;
 }
