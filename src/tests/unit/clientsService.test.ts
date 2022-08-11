@@ -3,9 +3,7 @@ import { clientsService } from "./../../services/clientsService.js";
 import { clientsRepository } from "./../../repositories/clientsRepository.js";
 import { paymentsRepository } from "./../../repositories/paymentsRepository.js";
 import { CreateClientData } from "./../../services/clientsService.js";
-import { Client } from "@prisma/client";
 
-//README: FALTA TESTAR DUAS FUNÇÕES
 describe("clients service create client function tests suite", () => {
 
     const payments = ["Mensal", "Trimestral", "Semestral", "Anual"];
@@ -199,35 +197,6 @@ describe("clients service update client tests suite", () => {
         expect(clientsService.getAmericanFormatDate).toBeCalled();
         expect(clientsService.calculateExpirationDate).toBeCalled();
     })
-
-    // it("should get the updated client data, with one field empty", async () => {
-    //     const client : CreateClientData = {
-    //         name: "",
-    //         payment: "Trimestral",
-    //         startDate: "01/01/2023",
-    //     }
-
-    //     // jest.spyOn(paymentsRepository, 'findPaymentMethod').mockImplementationOnce(() : any => {
-    //     //     return "Mensal"
-    //     // });
-
-    //     jest.spyOn(clientsRepository, 'findPaymentId').mockImplementationOnce(() : any => {
-    //         return 7;
-    //     });
-
-    //     jest.spyOn(clientsService, 'getAmericanFormatDate').mockImplementationOnce(() : any => {});
-
-    //     jest.spyOn(clientsService, 'calculateExpirationDate').mockImplementationOnce(() : any => {
-    //         return "01/01/2023"
-    //     });
-
-    //     await clientsService.updateClientProperties(client,client);
-
-    //     // expect(paymentsRepository.findPaymentMethod).toBeCalled();
-    //     expect(clientsRepository.findPaymentId).toBeCalled();
-    //     expect(clientsService.getAmericanFormatDate).toBeCalled();
-    //     expect(clientsService.calculateExpirationDate).toBeCalled();
-    // })
 
     it("should fail to delete a client, invalid id", async () => {
         const client : CreateClientData = {
