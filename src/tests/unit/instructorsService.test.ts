@@ -1,4 +1,3 @@
-import prisma from "./../../config/database.js";
 import { jest } from "@jest/globals";
 import { instructorsService } from "./../../services/instructorsService.js";
 import { instructorsRepository } from "./../../repositories/instructorsRepository.js";

@@ -11,9 +11,9 @@ export function createClient () {
     return client
 }
 
-export async function postClient (client : any) {
-    await prisma.client.create({data: {
-        id: 1,
+export async function postClient (client : any, id: number) {
+    const newClient = {
+        id,
         name: client.name,
         instructorId: 1,
         paymentId: 1,
@@ -21,7 +21,18 @@ export async function postClient (client : any) {
         finishDate: client.startDate,
         daysLeft: -1,
         notification: false
-    }})
+    }
+    await prisma.client.create({data: newClient})
+    return newClient;
+}
+
+export function updateClient () {
+    const updatedClient = {
+        name: faker.name.firstName(),
+        payment: "Trimestral", 
+        startDate: "01/01/2025",
+    }
+    return updatedClient
 }
 
 export async function deleteAll () {
