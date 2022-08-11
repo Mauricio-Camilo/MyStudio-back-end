@@ -77,18 +77,29 @@ function calculateDaysLeft(expirationDate : any) {
     return differenceInDays;
 }
 
+// README: CRIAR UMA VARIAVEL COM OS DIAS A SEREM CONSIDERADOS NO IF DO DAYSLEFT
+
 async function getAllClients (instructorId : number) {
 
     const clients = await clientsRepository.getAllClients(instructorId);
 
-    clients.forEach (async (client) =>  {
-        const formattedDate = getAmericanFormatDate(client.finishDate)
+    for (let i = 0; i < clients.length; i ++) {
+        const formattedDate = getAmericanFormatDate(clients[i].finishDate)
         const daysLeft = calculateDaysLeft(formattedDate);
-        client.daysLeft = daysLeft;
+        clients[i].daysLeft = daysLeft;
         if (daysLeft < 7) {
-            client.notification = true;
+            clients[i].notification = true;
         }
-    })
+    }
+
+    // clients.forEach (async (client) =>  {
+    //     const formattedDate = getAmericanFormatDate(client.finishDate)
+    //     const daysLeft = calculateDaysLeft(formattedDate);
+    //     client.daysLeft = daysLeft;
+    //     if (daysLeft < 7) {
+    //         client.notification = true;
+    //     }
+    // })
 
     return clients;
 }
@@ -105,14 +116,13 @@ async function deleteClient (clientId: number) {
 
 async function updateClient (client : any, clientId : number) {
 
-    
     const response = await clientsRepository.findClientById(clientId);
     
     if (!response) {
         throw { name: "notFound", message: "Client not found"}
     }
     
-    const updatedClient = await updateClientProperties(client, response);
+    const updatedClient = await clientsService.updateClientProperties(client, response);
     
     await clientsRepository.updateClientData(updatedClient, clientId);
 }
@@ -129,8 +139,8 @@ async function updateClientProperties (client : any, response : any) {
     client.payment = await paymentsRepository.findPaymentMethod(response.paymentId);
 
     if (client.payment !== "" || client.startDate !== "") {
-        const formattedStartDate = getAmericanFormatDate(client.startDate)
-        newExpirationDate = calculateExpirationDate(client.payment, formattedStartDate);
+        const formattedStartDate = clientsService.getAmericanFormatDate(client.startDate)
+        newExpirationDate = clientsService.calculateExpirationDate(client.payment, formattedStartDate);
     }
     
     client.payment = await clientsRepository.findPaymentId(client.payment)
