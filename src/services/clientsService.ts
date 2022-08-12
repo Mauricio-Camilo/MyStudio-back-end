@@ -30,7 +30,7 @@ async function createClient (client : CreateClientData, instructorId : number) {
     delete client.payment;
 
     await clientsRepository.registerClient({...client,
-        instructorId, paymentId, finishDate: expirationDate, notification: false})
+        instructorId, paymentId, finishDate: expirationDate, notification: false});
 }
 
 function getAmericanFormatDate (startDate : string) {

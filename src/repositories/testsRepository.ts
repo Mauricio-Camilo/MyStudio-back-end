@@ -1,4 +1,5 @@
 import  prisma  from "./../config/database.js";
+import bcrypt from "bcrypt";
 
 export async function resetDatabase() {
     await prisma.$transaction([
@@ -15,4 +16,11 @@ export async function seedDatabase() {
         prisma.$executeRaw`INSERT INTO payments (period) VALUES ('Semestral')`,
         prisma.$executeRaw`INSERT INTO payments (period) VALUES ('Anual')`,
     ])
+    await prisma.instructor.create({
+        data: {
+            name: "Instrutor1",
+            cpf: "000.000.000-00",
+            password: bcrypt.hashSync("password",10)
+        }
+    })
 }
