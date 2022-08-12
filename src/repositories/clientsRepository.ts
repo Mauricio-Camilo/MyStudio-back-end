@@ -1,7 +1,7 @@
 import { Client } from "@prisma/client";
 import prisma from "./../config/database.js";
 
-export type SaveClientData = Omit<Client,"id"|"daysLeft">
+export type SaveClientData = Omit<Client,"id">
 
 async function findClientName (name: string) {
     const instructor = await prisma.client.findFirst({where: {name}});
@@ -14,6 +14,7 @@ async function findPaymentId (period: string) {
 }
 
 async function registerClient (client : SaveClientData) {
+  console.log(client);
   await prisma.client.create({data : client})
 }
 
@@ -54,7 +55,9 @@ async function updateClientData (client : any, id : number) {
       name: client.name,
       paymentId: client.payment,
       startDate: client.startDate,
-      finishDate: client.finishDate
+      finishDate: client.finishDate,
+      daysLeft: client.daysLeft,
+      notification: client.notification
     }
   })
 }

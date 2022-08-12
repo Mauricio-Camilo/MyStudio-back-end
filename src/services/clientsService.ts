@@ -11,6 +11,8 @@ async function createClient (client : CreateClientData, instructorId : number) {
 
     const {name, payment, startDate} = client;
 
+    let notification : boolean = false;
+
     const checkName = await clientsRepository.findClientName(name);
 
     if (checkName) {
@@ -24,13 +26,17 @@ async function createClient (client : CreateClientData, instructorId : number) {
     }
 
     const expirationDate = clientsService.calculateExpirationDate(payment, formattedStartDate);
+
+    const daysLeft = Math.round(clientsService.calculateDaysLeft(expirationDate));
+
+    if (daysLeft < 7) notification = true;
     
     const paymentId = await clientsRepository.findPaymentId(payment);
 
     delete client.payment;
 
     await clientsRepository.registerClient({...client,
-        instructorId, paymentId, finishDate: expirationDate, notification: false});
+        instructorId, paymentId, finishDate: expirationDate, daysLeft, notification});
 }
 
 function getAmericanFormatDate (startDate : string) {
@@ -68,29 +74,20 @@ function calculateExpirationDate (payment : string, americanFormattedDate : any)
 
 function calculateDaysLeft(expirationDate : any) {
 
+    const formattedExpirtationDate = clientsService.getAmericanFormatDate(expirationDate);
+
     const today = new Date();
 
-    let differenceInMiliSeconds = expirationDate.getTime() - today.getTime();
+    let daysLeftInMiliseconds = formattedExpirtationDate.getTime() - today.getTime();
     
-    let differenceInDays = differenceInMiliSeconds / (1000 * 3600 * 24)
+    let daysLeft = daysLeftInMiliseconds / (1000 * 3600 * 24);
     
-    return differenceInDays;
+    return daysLeft;
 }
-
-// README: CRIAR UMA VARIAVEL COM OS DIAS A SEREM CONSIDERADOS NO IF DO DAYSLEFT
 
 async function getAllClients (instructorId : number) {
 
     const clients = await clientsRepository.getAllClients(instructorId);
-
-    clients.forEach (async (client) =>  {
-        const formattedDate = getAmericanFormatDate(client.finishDate)
-        const daysLeft = calculateDaysLeft(formattedDate);
-        client.daysLeft = daysLeft;
-        if (daysLeft < 7) {
-            client.notification = true;
-        }
-    })
 
     return clients;
 }
@@ -129,12 +126,16 @@ async function updateClientProperties (client : any, response : any) {
     if (client.payment === "")
     client.payment = await paymentsRepository.findPaymentMethod(response.paymentId);
 
-    const formattedStartDate = clientsService.getAmericanFormatDate(client.startDate)
+    const formattedStartDate = clientsService.getAmericanFormatDate(client.startDate);
     newExpirationDate = clientsService.calculateExpirationDate(client.payment, formattedStartDate);
-    
+    const newDaysLeft = Math.round(clientsService.calculateDaysLeft(newExpirationDate));
+
+    if (newDaysLeft < 7) client.notification = true;
+    else client.notification = false;
+
     client.payment = await clientsRepository.findPaymentId(client.payment)
 
-    return {...client, finishDate: newExpirationDate};
+    return {...client, finishDate: newExpirationDate, daysLeft: newDaysLeft};
 }
 
 export const clientsService = {
