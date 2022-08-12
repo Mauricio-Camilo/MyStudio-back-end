@@ -105,7 +105,6 @@ describe ("Create clients test suit", () => {
         expect(checkClient.name).toBe(client.name);
     })
 
-
     it("Should fail to create a client, repeated name", async () => {
         const login = await generateToken();
         const client = clientsfactory.createClient();
@@ -129,7 +128,6 @@ describe ("Create clients test suit", () => {
         const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
         expect(response.statusCode).toBe(401);
     })
-
 
     it("Should fail to create a client, invalid date", async () => {
         const login = await generateToken();

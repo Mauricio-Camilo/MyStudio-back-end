@@ -75,9 +75,7 @@ describe("instructors service tests suite", () => {
         await instructorsService.signIn(login);
 
         expect(instructorsRepository.findCpf).toBeCalled();
-
         expect(instructorsService.comparePassword).toBeCalled();
-
         expect(tokenProvider.encode).toBeCalled();
     })
 
@@ -105,7 +103,6 @@ describe("instructors service tests suite", () => {
             message: "Incorrect password",
             name: "notAuthorized"
         });
-
     })
 
     it("Should fail to make login, not found cpf", async () => {

@@ -49,7 +49,6 @@ describe("clients service create client function tests suite", () => {
             message: "Name already exists",
             name: "alreadyExists"
         })
-
     })
 
     it ("should fail to create a client, invalid startDate", async () => {
@@ -68,14 +67,12 @@ describe("clients service create client function tests suite", () => {
             message: "Invalid date",
             name: "validationError"
         })
-
     })
 })
 
 describe("clients service get all clients function tests suite", () => {
 
     it("Should get all clients", async () => {
-
         const client : any = [{
             id: 1,
             name: "Aluno1",
@@ -95,9 +92,7 @@ describe("clients service get all clients function tests suite", () => {
             finishDate: "15/08/2022",
             daysLeft: -1,
             notification: false
-        }
-    ]
-    
+        }]
         jest.spyOn(clientsRepository, 'getAllClients').mockImplementationOnce(() : any => {
             return client
         });
