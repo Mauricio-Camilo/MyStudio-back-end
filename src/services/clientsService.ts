@@ -4,12 +4,13 @@ import { paymentsRepository } from "./../repositories/paymentsRepository.js";
 export interface CreateClientData {
     name: string,
     payment: string,
+    service: string,
     startDate: string
 }
 
 async function createClient (client : CreateClientData, instructorId : number) {
 
-    const {name, payment, startDate} = client;
+    const {name, service, payment, startDate} = client;
 
     let notification : boolean = false;
 
@@ -33,10 +34,14 @@ async function createClient (client : CreateClientData, instructorId : number) {
 
     const paymentId = await clientsRepository.findPaymentId(payment);
 
+    const serviceId = await clientsRepository.findServiceId(service);
+
     delete client.payment;
 
-    // await clientsRepository.registerClient({...client,
-    //     instructorId, paymentId, finishDate: expirationDate, daysLeft, notification});
+    delete client.service;
+
+    await clientsRepository.registerClient({...client,
+        instructorId, paymentId, serviceId, finishDate: expirationDate, daysLeft, notification});
 }
 
 function getAmericanFormatDate (startDate : string) {
@@ -121,7 +126,7 @@ async function updateClient (client : any, clientId : number) {
 
     const updatedClient = await clientsService.updateClientProperties(client, response);
 
-    // await clientsRepository.updateClientData(updatedClient, clientId);
+    await clientsRepository.updateClientData(updatedClient, clientId);
 }
 
 async function updateClientProperties (client : any, response : any) {
@@ -135,6 +140,10 @@ async function updateClientProperties (client : any, response : any) {
     if (client.payment === "")
     client.payment = await paymentsRepository.findPaymentMethod(response.paymentId);
 
+    if (client.service === "") {client.service = response.serviceId}
+    
+    else client.service = await clientsRepository.findServiceId(client.service);
+    
     const formattedStartDate = clientsService.getAmericanFormatDate(client.startDate);
     newExpirationDate = clientsService.calculateExpirationDate(client.payment, formattedStartDate);
     const newDaysLeft = Math.round(clientsService.calculateDaysLeft(newExpirationDate));

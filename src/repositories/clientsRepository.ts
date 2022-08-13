@@ -13,8 +13,12 @@ async function findPaymentId (period: string) {
   return paymentId.id;
 }
 
+async function findServiceId (service: string) {
+  const serviceId = await prisma.service.findFirst({where: {name: service}});
+  return serviceId.id;
+}
+
 async function registerClient (client : SaveClientData) {
-  console.log(client);
   await prisma.client.create({data : client})
 }
 
@@ -33,7 +37,9 @@ async function getAllClients (instructorId : number) {
     select: {
       id: true, name: true, startDate: true, finishDate: true, notification: true, daysLeft: true,
     payments: {select: 
-      {period: true}}
+      {period: true}},
+    services: {select:
+    {name: true}}
     }
   })
   return clients;
@@ -54,6 +60,7 @@ async function updateClientData (client : any, id : number) {
     data: {
       name: client.name,
       paymentId: client.payment,
+      serviceId: client.service,
       startDate: client.startDate,
       finishDate: client.finishDate,
       daysLeft: client.daysLeft,
@@ -67,6 +74,7 @@ export const clientsRepository = {
   findClientById,
   findClientName,
   findPaymentId,
+  findServiceId,
   getAllClients,
   registerClient,
   updateClientData,
