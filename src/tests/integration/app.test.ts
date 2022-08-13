@@ -94,90 +94,90 @@ async function generateToken () {
     return {token, instrucutorId};
 }
 
-describe ("Create clients test suit", () => {
+// describe ("Create clients test suit", () => {
 
-    it("Should create a client", async () => {
-        const login = await generateToken();
-        const client = clientsfactory.createClient();
-        const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
-        expect(response.statusCode).toBe(201);
+//     it("Should create a client", async () => {
+//         const login = await generateToken();
+//         const client = clientsfactory.createClient();
+//         const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
+//         expect(response.statusCode).toBe(201);
 
-        const checkClient = await prisma.client.findFirst({where: {name: client.name}});
-        expect(checkClient.name).toBe(client.name);
-    })
+//         const checkClient = await prisma.client.findFirst({where: {name: client.name}});
+//         expect(checkClient.name).toBe(client.name);
+//     })
 
-    it("Should fail to create a client, repeated name", async () => {
-        const login = await generateToken();
-        const client = clientsfactory.createClient();
-        await clientsfactory.postClient(client, 1);
-        const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
-        expect(response.statusCode).toBe(409);
-    })
+//     it("Should fail to create a client, repeated name", async () => {
+//         const login = await generateToken();
+//         const client = clientsfactory.createClient();
+//         await clientsfactory.postClient(client, 1);
+//         const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
+//         expect(response.statusCode).toBe(409);
+//     })
 
-    it("Should fail to create a client, invalid inputs", async () => {
-        const login = await generateToken();
-        const client = clientsfactory.createClient();
-        client.payment = "Bimestral";
-        const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
-        expect(response.statusCode).toBe(422);
-    })
+//     it("Should fail to create a client, invalid inputs", async () => {
+//         const login = await generateToken();
+//         const client = clientsfactory.createClient();
+//         client.payment = "Bimestral";
+//         const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
+//         expect(response.statusCode).toBe(422);
+//     })
 
-    it("Should fail to create a client, invalid token", async () => {
-        const login = await generateToken();
-        const client = clientsfactory.createClient();
-        login.token = "invalid token"
-        const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
-        expect(response.statusCode).toBe(401);
-    })
+//     it("Should fail to create a client, invalid token", async () => {
+//         const login = await generateToken();
+//         const client = clientsfactory.createClient();
+//         login.token = "invalid token"
+//         const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
+//         expect(response.statusCode).toBe(401);
+//     })
 
-    it("Should fail to create a client, invalid date", async () => {
-        const login = await generateToken();
-        const client = clientsfactory.createClient();
-        client.startDate = "35/20/2022"
-        const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
-        expect(response.statusCode).toBe(422);
-    })
-})
+//     it("Should fail to create a client, invalid date", async () => {
+//         const login = await generateToken();
+//         const client = clientsfactory.createClient();
+//         client.startDate = "35/20/2022"
+//         const response = await supertest(app).post("/clients").send(client).set("Authorization", `Bearer ${login.token}`);
+//         expect(response.statusCode).toBe(422);
+//     })
+// })
 
-describe("Get clients test suit", () => {
-    it("should get all clients" , async () => {
-        const login = await generateToken();
-        const clientsQuantity = 5;
-        const scenario = await scenariofactory.createScenarioOneSeveralClientsCreated(clientsQuantity);
-        const response = await supertest(app).get("/clients").set("Authorization", `Bearer ${login.token}`);
-        const index = Math.floor(Math.random() * clientsQuantity-1);
-        expect(response.body.length).toBe(clientsQuantity);
-        expect(scenario[index].name).toEqual(response.body[index].name);
-    })
+// describe("Get clients test suit", () => {
+//     it("should get all clients" , async () => {
+//         const login = await generateToken();
+//         const clientsQuantity = 5;
+//         const scenario = await scenariofactory.createScenarioOneSeveralClientsCreated(clientsQuantity);
+//         const response = await supertest(app).get("/clients").set("Authorization", `Bearer ${login.token}`);
+//         const index = Math.floor(Math.random() * clientsQuantity-1);
+//         expect(response.body.length).toBe(clientsQuantity);
+//         expect(scenario[index].name).toEqual(response.body[index].name);
+//     })
 
-    it("should get all clients, invalid token" , async () => {
-        const login = await generateToken();
-        login.token = "invalid token";
-        const response = await supertest(app).get("/clients").set("Authorization", `Bearer ${login.token}`);
-        expect(response.statusCode).toBe(401);
-    })
-})
+//     it("should get all clients, invalid token" , async () => {
+//         const login = await generateToken();
+//         login.token = "invalid token";
+//         const response = await supertest(app).get("/clients").set("Authorization", `Bearer ${login.token}`);
+//         expect(response.statusCode).toBe(401);
+//     })
+// })
 
-describe("Delete clients test suit", () => {
-    it("should delete a client", async ()=> {
-        const login = await generateToken();
-        const clientId = 1;
-        const client = clientsfactory.createClient();
-        await clientsfactory.postClient(client,clientId);
-        const response = await supertest(app).delete(`/clients/${clientId}`);
-        expect (response.statusCode).toBe(200);
-        expect (response.body[0]).toBeUndefined();
-    })
+// describe("Delete clients test suit", () => {
+//     it("should delete a client", async ()=> {
+//         const login = await generateToken();
+//         const clientId = 1;
+//         const client = clientsfactory.createClient();
+//         await clientsfactory.postClient(client,clientId);
+//         const response = await supertest(app).delete(`/clients/${clientId}`);
+//         expect (response.statusCode).toBe(200);
+//         expect (response.body[0]).toBeUndefined();
+//     })
 
-    it("should fail to delete a client, invalid clientId", async ()=> {
-        const login = await generateToken();
-        const clientId = 1;
-        const client = clientsfactory.createClient();
-        await clientsfactory.postClient(client,clientId);
-        const response = await supertest(app).delete(`/clients/2`);
-        expect (response.statusCode).toBe(404);
-    })
-})
+//     it("should fail to delete a client, invalid clientId", async ()=> {
+//         const login = await generateToken();
+//         const clientId = 1;
+//         const client = clientsfactory.createClient();
+//         await clientsfactory.postClient(client,clientId);
+//         const response = await supertest(app).delete(`/clients/2`);
+//         expect (response.statusCode).toBe(404);
+//     })
+// })
 
 describe("Update clients test suit", () => {
     it("should update a client", async ()=> {
@@ -195,10 +195,10 @@ describe("Update clients test suit", () => {
 
     it("should fail to update a client, invalid clientId", async ()=> {
         const login = await generateToken();
-        const clientId = 1;
+        const clientId = 5;
         const client = clientsfactory.createClient();
         await clientsfactory.postClient(client,clientId);
-        const response = await supertest(app).put(`/clients/2`);
+        const response = await supertest(app).put(`/clients/10`).send(client);
         expect (response.statusCode).toBe(404);
     })
 })

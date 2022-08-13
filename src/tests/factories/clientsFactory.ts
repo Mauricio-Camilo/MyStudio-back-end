@@ -6,6 +6,7 @@ export function createClient () {
     const client = {
         name: faker.name.firstName(),
         payment: "Mensal", 
+        service: "Pilates",
         startDate: "01/01/2022",
     }
     return client
@@ -31,6 +32,7 @@ export function updateClient () {
     const updatedClient = {
         name: faker.name.firstName(),
         payment: "Trimestral", 
+        service: "Barras",
         startDate: "01/01/2025",
     }
     return updatedClient
