@@ -14,6 +14,7 @@ describe("clients service create client function tests suite", () => {
             const client : CreateClientData = {
                 name: "Aluno1",
                 payment: payment,
+                service: "Pilates",
                 startDate: "01/01/2022",
             }
     
@@ -21,11 +22,14 @@ describe("clients service create client function tests suite", () => {
     
             jest.spyOn(clientsRepository, 'findPaymentId').mockImplementationOnce(() : any => {});
     
+            jest.spyOn(clientsRepository, 'findServiceId').mockImplementationOnce(() : any => {});
+
             jest.spyOn(clientsRepository, 'registerClient').mockImplementationOnce(() : any => {});
     
             await clientsService.createClient(client,1)
     
             expect(clientsRepository.findClientName).toBeCalled();
+            expect(clientsRepository.findPaymentId).toBeCalled();
             expect(clientsRepository.findPaymentId).toBeCalled();
             expect(clientsRepository.registerClient).toBeCalled();
         })
@@ -36,6 +40,7 @@ describe("clients service create client function tests suite", () => {
         const client : CreateClientData = {
             name: "Aluno1",
             payment: "Mensal",
+            service: "Pilates",
             startDate: "01/01/2022",
         }
 
@@ -56,6 +61,7 @@ describe("clients service create client function tests suite", () => {
         const client : CreateClientData = {
             name: "Aluno1",
             payment: "Mensal",
+            service: "Pilates",
             startDate: "01/15/2022",
         }
 
@@ -77,7 +83,8 @@ describe("clients service get all clients function tests suite", () => {
             id: 1,
             name: "Aluno1",
             instructorId: 3,
-            paymentId: 7,
+            serviceId: 1,
+            paymentId: 2,
             startDate: "01/01/2022",
             finishDate: "15/08/2022",
             daysLeft: -1,
@@ -87,9 +94,10 @@ describe("clients service get all clients function tests suite", () => {
             id: 2,
             name: "Aluno2",
             instructorId: 3,
-            paymentId: 8,
+            serviceId: 1,
+            paymentId: 3,
             startDate: "01/01/2022",
-            finishDate: "15/08/2022",
+            finishDate: "15/12/2022",
             daysLeft: -1,
             notification: false
         }]
@@ -142,6 +150,7 @@ describe("clients service update client tests suite", () => {
         const client : CreateClientData = {
             name: "",
             payment: "",
+            service: "",
             startDate: "",
         }
 
@@ -166,40 +175,44 @@ describe("clients service update client tests suite", () => {
 
     const daysLeftToPassesUnitTests = [5,-10];
 
+    const services = ["", "Pilates"];
+
     daysLeftToPassesUnitTests.forEach( async (day) => {
-        function calculateDaysleft () {
-            const today = new Date();
-            const daysLeft = new Date(today.setDate(today.getDate() - day));
-            console.log(daysLeft.toLocaleDateString("pt-BR"));
-            return daysLeft.toLocaleDateString("pt-BR");
-        }
-        it("should get the updated client data, with payment and startDate empties", async () => {
-            const client : CreateClientData = {
-                name: "",
-                payment: "",
-                startDate: "",
+        services.forEach( async (service) => {
+            function calculateDaysleft () {
+                const today = new Date();
+                const daysLeft = new Date(today.setDate(today.getDate() - day));
+                return daysLeft.toLocaleDateString("pt-BR");
             }
-    
-            jest.spyOn(paymentsRepository, 'findPaymentMethod').mockImplementationOnce(() : any => {
-                return "Mensal"
-            });
-    
-            jest.spyOn(clientsRepository, 'findPaymentId').mockImplementationOnce(() : any => {
-                return 1;
-            });
-    
-            jest.spyOn(clientsService, 'getAmericanFormatDate').mockImplementationOnce(() : any => {});
-    
-            jest.spyOn(clientsService, 'calculateExpirationDate').mockImplementationOnce(() : any => {
-                return calculateDaysleft()
-            });
-    
-            await clientsService.updateClientProperties(client,client);
-    
-            expect(paymentsRepository.findPaymentMethod).toBeCalled();
-            expect(clientsRepository.findPaymentId).toBeCalled();
-            expect(clientsService.getAmericanFormatDate).toBeCalled();
-            expect(clientsService.calculateExpirationDate).toBeCalled();
+            it("should get the updated client data, with payment and startDate empties", async () => {
+                const client : CreateClientData = {
+                    name: "",
+                    payment: "",
+                    service: service,
+                    startDate: "",
+                }
+        
+                jest.spyOn(paymentsRepository, 'findPaymentMethod').mockImplementationOnce(() : any => {
+                    return "Mensal"
+                });
+        
+                jest.spyOn(clientsRepository, 'findPaymentId').mockImplementationOnce(() : any => {
+                    return 1;
+                });
+        
+                jest.spyOn(clientsService, 'getAmericanFormatDate').mockImplementationOnce(() : any => {});
+        
+                jest.spyOn(clientsService, 'calculateExpirationDate').mockImplementationOnce(() : any => {
+                    return calculateDaysleft()
+                });
+        
+                await clientsService.updateClientProperties(client,client);
+        
+                expect(paymentsRepository.findPaymentMethod).toBeCalled();
+                expect(clientsRepository.findPaymentId).toBeCalled();
+                expect(clientsService.getAmericanFormatDate).toBeCalled();
+                expect(clientsService.calculateExpirationDate).toBeCalled();
+            })
         })
     })
 
@@ -207,10 +220,11 @@ describe("clients service update client tests suite", () => {
         const client : CreateClientData = {
             name: "",
             payment: "",
+            service: "",
             startDate: "",
         }
 
-        const clientId = 1;
+        const clientId = 10;
 
         jest.spyOn(clientsRepository, 'findClientById').mockImplementationOnce(() : any => {});
 
