@@ -116,7 +116,7 @@ async function deleteClient (clientId: number) {
     await clientsRepository.deleteClientById(clientId);
 }
 
-async function updateClient (client : any, clientId : number) {
+async function updateClient (client : CreateClientData, clientId : number) {
 
     const response = await clientsRepository.findClientById(clientId);
 
