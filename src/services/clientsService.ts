@@ -89,6 +89,15 @@ async function getAllClients (instructorId : number) {
 
     const clients = await clientsRepository.getAllClients(instructorId);
 
+    const notificationDate = 14;
+
+    clients.forEach (async (client) =>  {
+        const daysLeft = calculateDaysLeft(client.finishDate);
+        client.daysLeft = Math.round(daysLeft);
+        if (daysLeft < notificationDate) { client.notification = true }
+        else { client.notification = false }
+    })
+
     return clients;
 }
 

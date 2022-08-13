@@ -23,13 +23,13 @@ model Client {
   id          Int           @id @default(autoincrement())
   name        String        @unique
   instructorId  Int
+  serviceId     Int          
   paymentId     Int
   startDate    String   
   finishDate   String    
-  daysLeft      Int           @default(-1)
-  notification  Boolean   @default(false)
   instructors   Instructor  @relation(fields: [instructorId], references: [id])
   payments      Payment     @relation(fields: [paymentId], references: [id])
+  services      Service     @relation(fields: [serviceId], references: [id])
   @@map("clients")
 }
 
@@ -38,5 +38,12 @@ model Payment {
   period      String
   clients     Client[]
   @@map("payments")
+}
+
+model Service {
+  id          Int           @id @default(autoincrement())
+  name        String
+  clients     Client[]
+  @@map("services")
 }
 
