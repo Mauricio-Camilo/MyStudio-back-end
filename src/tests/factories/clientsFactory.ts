@@ -17,6 +17,7 @@ export async function postClient (client : any, id: number) {
         name: client.name,
         instructorId: 1,
         paymentId: 1,
+        serviceId: 1,
         startDate: client.startDate,
         finishDate: client.startDate,
         daysLeft: -1,

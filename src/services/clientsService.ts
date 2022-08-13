@@ -30,13 +30,13 @@ async function createClient (client : CreateClientData, instructorId : number) {
     const daysLeft = Math.round(clientsService.calculateDaysLeft(expirationDate));
 
     if (daysLeft < 7) notification = true;
-    
+
     const paymentId = await clientsRepository.findPaymentId(payment);
 
     delete client.payment;
 
-    await clientsRepository.registerClient({...client,
-        instructorId, paymentId, finishDate: expirationDate, daysLeft, notification});
+    // await clientsRepository.registerClient({...client,
+    //     instructorId, paymentId, finishDate: expirationDate, daysLeft, notification});
 }
 
 function getAmericanFormatDate (startDate : string) {
@@ -53,7 +53,7 @@ function getAmericanFormatDate (startDate : string) {
 }
 
 function calculateExpirationDate (payment : string, americanFormattedDate : any) {
-  
+
     if (payment === "Mensal") {
         const formattedExpirtationDate = new Date(americanFormattedDate.setDate(americanFormattedDate.getDate() + 30));
         return formattedExpirtationDate.toLocaleDateString("pt-BR");
@@ -79,9 +79,9 @@ function calculateDaysLeft(expirationDate : any) {
     const today = new Date();
 
     let daysLeftInMiliseconds = formattedExpirtationDate.getTime() - today.getTime();
-    
+
     let daysLeft = daysLeftInMiliseconds / (1000 * 3600 * 24);
-    
+
     return daysLeft;
 }
 
@@ -114,24 +114,24 @@ async function deleteClient (clientId: number) {
 async function updateClient (client : any, clientId : number) {
 
     const response = await clientsRepository.findClientById(clientId);
-    
+
     if (!response) {
         throw { name: "notFound", message: "Client not found"}
     }
-    
+
     const updatedClient = await clientsService.updateClientProperties(client, response);
-    
-    await clientsRepository.updateClientData(updatedClient, clientId);
+
+    // await clientsRepository.updateClientData(updatedClient, clientId);
 }
 
 async function updateClientProperties (client : any, response : any) {
-    
+
     let newExpirationDate = response.finishDate;
-    
+
     if (client.name === "") client.name = response.name;
-    
+
     if (client.startDate === "") client.startDate = response.startDate;
-    
+
     if (client.payment === "")
     client.payment = await paymentsRepository.findPaymentMethod(response.paymentId);
 
