@@ -1,7 +1,7 @@
 import { Client } from "@prisma/client";
 import prisma from "./../config/database.js";
 
-export type SaveClientData = Omit<Client,"id">
+// export type SaveClientData = Omit<Client,"id">
 
 async function findClientName (name: string) {
     const instructor = await prisma.client.findFirst({where: {name}});
@@ -13,7 +13,7 @@ async function findPaymentId (period: string) {
   return paymentId.id;
 }
 
-async function registerClient (client : SaveClientData) {
+async function registerClient (client : any) {
   console.log(client);
   await prisma.client.create({data : client})
 }
@@ -31,7 +31,7 @@ async function getAllClients (instructorId : number) {
   const clients = await prisma.client.findMany({
     where: {instructorId},
     select: {
-      id: true, name: true, startDate: true, finishDate: true, notification: true, daysLeft: true,
+      id: true, name: true, startDate: true, finishDate: true,
     payments: {select: 
       {period: true}}
     }
@@ -56,8 +56,6 @@ async function updateClientData (client : any, id : number) {
       paymentId: client.payment,
       startDate: client.startDate,
       finishDate: client.finishDate,
-      daysLeft: client.daysLeft,
-      notification: client.notification
     }
   })
 }
