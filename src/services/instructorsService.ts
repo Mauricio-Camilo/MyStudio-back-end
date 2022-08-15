@@ -3,8 +3,6 @@ import { Instructor } from '@prisma/client';
 import { tokenProvider } from "./../providers/tokenProvider.js"
 import { instructorsRepository } from "./../repositories/instructorsRepository.js";
 
-// README: MUDAR O JEITO DE EXPORTAR FUNÇÕES PARA FUNCIONAR NOS TESTES
-
 export type CreateInstructorData = Omit<Instructor, "id">
 export type CreateLoginData = Omit<Instructor, "id"|"name">
 

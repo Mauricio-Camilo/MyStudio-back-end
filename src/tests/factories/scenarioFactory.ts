@@ -9,5 +9,3 @@ export async function createScenarioOneSeveralClientsCreated(clientsQuantity : n
     }
     return clients;
 }
-
-

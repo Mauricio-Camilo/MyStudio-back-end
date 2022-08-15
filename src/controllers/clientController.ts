@@ -9,7 +9,7 @@ export async function createClient (req: Request, res: Response) {
 
     await clientsService.createClient(req.body, instructorId);
 
-    res.status(201).send("Ok");
+    res.status(201).send("Client Created");
 }
 
 export async function getAllClients (req: Request, res: Response) {
@@ -29,7 +29,7 @@ export async function deleteClient (req: Request, res: Response) {
 
     await clientsService.deleteClient(parseInt(id))
 
-    res.status(200).send("Aluno deletado")
+    res.status(200).send("Client deleted")
 }
 
 export async function updateClient (req: Request, res: Response) {
@@ -38,5 +38,5 @@ export async function updateClient (req: Request, res: Response) {
     
     await clientsService.updateClient(req.body, parseInt(id));
 
-    res.status(200).send("cliente editado com sucesso");
+    res.status(200).send("Client updated");
 }

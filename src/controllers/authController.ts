@@ -8,7 +8,7 @@ export async function createInstructor (req: Request, res: Response) {
 
     await instructorsService.registerInstructor({name, cpf, password}, confirmPassword);
 
-    res.status(201).send("Rota de signup ativa");
+    res.status(201).send("Instructor created");
 }
 
 export async function loginInstructor (req: Request, res: Response) {

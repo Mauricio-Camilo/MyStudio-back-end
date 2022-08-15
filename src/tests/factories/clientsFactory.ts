@@ -1,6 +1,5 @@
 import prisma  from "./../../config/database.js";
 import { faker } from '@faker-js/faker';
-import { Client } from "@prisma/client";
 
 export function createClient () {
     const client = {
