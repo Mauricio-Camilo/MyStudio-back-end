@@ -21,9 +21,11 @@ npm i
 ```
 3. Create a .env file with the following fields:
 ```bash
-DATABASE=
 PORT=
-MONGO_URL=
+DATABASE_URL=
+SECRET=
+EXPIRES_IN=
+NODE_ENV=
 ```
 4. Run the back-end with
 ```bash
