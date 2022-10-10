@@ -34,13 +34,13 @@ async function signIn (login : CreateLoginData) {
     const instructor = await instructorsRepository.findCpf(cpf);
 
     if (!instructor) {
-        throw { name: "notFound", message: "Cpf not found"}
+        throw { name: "notFound", message: "CPF não encontrado"}
     }
 
     const checkPassword : boolean = await instructorsService.comparePassword(password, instructor.password);
 
     if (!checkPassword) {
-        throw { name: "notAuthorized", message: "Incorrect password"}
+        throw { name: "notAuthorized", message: "Senha incorreta"}
     }
 
     const token = tokenProvider.encode({id: instructor.id});
