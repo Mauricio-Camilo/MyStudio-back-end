@@ -102,7 +102,11 @@ async function getAllClients (instructorId : number) {
         if (daysLeft < notificationDate) { client.notification = true }
         else { client.notification = false }
     })
-
+    clients.sort((a,b) => {
+        if (a.daysLeft > b.daysLeft) return 1;
+        if (a.daysLeft < b.daysLeft) return -1;
+    })
+    
     return clients;
 }
 
